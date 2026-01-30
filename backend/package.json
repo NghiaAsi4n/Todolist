@@ -16,7 +16,9 @@
     "dotenv": "^17.2.3",
     "express": "^4.18.2",
     "mongoose": "^9.1.5",
-    "mongose": "^0.0.2-security"
+    "mongose": "^0.0.2-security",
+    "to-do-x": "file:..",
+    "todox": "file:.."
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
