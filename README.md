@@ -1,0 +1,55 @@
+# 🚀 Pro Task Manager & Productivity Suite
+> Một hệ thống quản lý công việc toàn diện (All-in-one Ecosystem) tích hợp phương pháp Pomodoro, phân tích hiệu suất và hệ thống nhắc nhở tự động.
+
+## 🔗 Demo
+* **Live App:** [https://todo-app-frontend-bice-five.vercel.app](https://todo-app-frontend-bice-five.vercel.app)
+* **Backend API:** [https://to-do-list-afyb.onrender.com/ping](https://to-do-list-afyb.onrender.com/ping)
+
+---
+
+## ✨ Tính năng nổi bật (Key Features)
+
+### 🎯 Quản lý công việc thông minh
+* **CRUD Task:** Thêm, sửa, xóa công việc nhanh chóng.
+* **Tagging System:** Phân loại công việc theo màu sắc (Work, Study, Personal).
+* **Smart Filter & Search:**
+    * Lọc theo thời gian (Hôm nay, Tuần, Tháng).
+    * Tìm kiếm theo từ khóa với công nghệ **Debounce** (giảm tải server).
+
+### 🍅 Nâng cao năng suất (Productivity)
+* **Pomodoro Widget:** Đồng hồ đếm ngược tích hợp sẵn (Focus / Short Break / Long Break) với âm thanh thông báo.
+* **Analytics Dashboard:** Biểu đồ trực quan (Bar/Pie Chart) thống kê hiệu suất làm việc, tự động thích ứng với giao diện Sáng/Tối.
+
+### 🤖 Hệ thống tự động hóa (Automation System)
+* **One-Tap Login:** Đăng nhập nhanh bằng **Google OAuth 2.0**.
+* **Daily Reminder:** Tự động gửi email nhắc việc vào **07:00 sáng** mỗi ngày.
+* **Real-time Warning:** Quét mỗi phút và gửi cảnh báo qua email nếu có task sắp hết hạn trong 30 phút.
+* **Weekly Report:** Tự động gửi báo cáo tổng kết hiệu suất vào tối Chủ Nhật.
+
+### 🎨 Trải nghiệm người dùng (UX/UI)
+* **Dark Mode / Light Mode:** Chuyển đổi giao diện mượt mà, lưu cài đặt vào LocalStorage.
+* **Responsive Design:** Tương thích hoàn hảo trên Mobile và Desktop.
+* **Modern UI:** Sử dụng bộ thư viện **Shadcn UI** (Radix based) cho các component cao cấp.
+
+---
+
+## 🛠️ Công nghệ sử dụng (Tech Stack)
+
+| Category | Technologies |
+| :--- | :--- |
+| **Frontend** | React (Vite), Tailwind CSS, Shadcn UI, Recharts, Lucide React, Axios |
+| **Backend** | Node.js, Express.js, MongoDB (Mongoose), JSON Web Token (JWT) |
+| **Services** | Node-cron (Job Scheduling), Nodemailer (SMTP Email), Google OAuth 2.0 |
+| **DevOps** | Vercel (Frontend), Render (Backend), UptimeRobot (Keep-alive) |
+
+---
+
+## 💡 Điểm sáng kỹ thuật (Technical Highlights)
+MongoDB Aggregation Pipeline ($facet):
+Tối ưu hóa hiệu năng bằng cách thực hiện 3 tác vụ thống kê (Đếm active/completed, Phân loại Tag, Chart data 7 ngày) chỉ trong một lần truy vấn Database.
+Concurrency Handling (Atomic Operations):
+Sử dụng findOneAndUpdate để xử lý Race Condition trong Cron Job. Đảm bảo không bao giờ gửi trùng lặp email ngay cả khi server scale nhiều instances.
+Secure Authentication Architecture:
+Sử dụng mô hình Proxy (Vercel Rewrites) kết hợp với HttpOnly Cookies.
+Cấu hình SameSite=Strict/Lax linh hoạt theo môi trường để chống tấn công XSS và CSRF.
+
