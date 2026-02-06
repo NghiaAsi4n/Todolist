@@ -51,16 +51,18 @@ return (
                 <PaginationPrevious
                 //Nhấn nút sẽ ktra: có phải trang 1 ko ? Nếu đúng ko làm gì hết : Nếu ko sẽ gọi handlePrev
                 onClick={page === 1 ? undefined : handlePrev}
-                className={cn(
-                    "cursor-pointer",
-                    page === 1 && "pointer-events-none opacity-50"
+                className= {cn (
+                    "cursor-pointer transition-colors",
+                        "text-muted-foreground hover:bg-primary/10 dark:hover:bg-primary/20",
+                        "hover:text-foreground dark:hover:text-white", 
+                        page === 1 && "pointer-events-none opacity-50"
                 )}
                 />
             </PaginationItem>
                 
             {/* Dấu 3 chấm 
-                //Tính số trang để xem cần hiển thị những trang nào
-                //Duyệt qua hàm pagestoShow bằng hàm map, mỗi lần duyệt có 1 phần tử p và index
+                Tính số trang để xem cần hiển thị những trang nào
+                Duyệt qua hàm pagestoShow bằng hàm map, mỗi lần duyệt có 1 phần tử p và index
             */} 
             {pagesToShow.map((p, index) => ( 
                 <PaginationItem key={index}>
@@ -68,11 +70,16 @@ return (
                     <PaginationEllipsis />
                 ) : (
                     <PaginationLink
-                    isActive={p === page}
-                    onClick={() => {
-                        if (p !== page) handlePageChange(p);
-                    }}
-                    className="cursor-pointer"
+                        isActive={p === page}
+                        onClick={() => {
+                            if (p !== page) handlePageChange(p);
+                        }}
+                    className={cn(
+                            "cursor-pointer transition-all duration-200 border-transparent",
+                            p === page 
+                                ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground shadow-md shadow-primary/20 scale-105 font-bold"
+                                : "text-muted-foreground hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-foreground dark:hover:text-white"
+                    )}
                     >
                     {p}
                     </PaginationLink>
@@ -85,7 +92,9 @@ return (
                 <PaginationNext
                 onClick={page === totalPages ? undefined : handleNext}
                 className={cn(
-                    "cursor-pointer",
+                    "cursor-pointer transition-colors", 
+                    "text-muted-foreground hover:bg-primary/10 dark:hover:bg-primary/20",
+                    "hover:text-foreground dark:hover:text-white",
                     page === totalPages && "pointer-events-none opacity-50"
                 )}
                 />

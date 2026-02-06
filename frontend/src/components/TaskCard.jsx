@@ -2,178 +2,236 @@ import React, { useState } from "react";
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { Calendar, CheckCircle2, Circle, SquarePen, Trash2 } from "lucide-react";
+import { Calendar, CheckCircle2, Circle, SquarePen, Trash2, CalendarClock, Tag } from "lucide-react";
 import { Input } from "./ui/input";
-import api from "@/lib/axios";
-import { toast } from "sonner";
+import { useTask } from "@/hooks/useTask";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
+const isOverdue = (dateString) => {
+    if (!dateString) return false;
+    return new Date(dateString) < new Date();
+};
 
 const TaskCard = ({ task, index, handleTaskChanged }) => {
+    //State quản lý việc hiển thị input sửa và lưu giá trị đang nhập liệu
     const [isEditting, setIsEditting] = useState(false);
-    const [updateTaskTitle, setUpdateTaskTitle] = useState(task.title || "");
+    const [titleInput, setTitleInput] = useState(task.title || "");
+    const [tagInput, setTagInput] = useState(task.tag || "general");
 
-    const deleteTask = async (taskId) => {
-        try {
-            await api.delete(`/tasks/${taskId}`);
-            toast.success("Nhiệm vụ đã xoá.");
-            handleTaskChanged();
-            } catch (error) {
-            console.error("Lỗi xảy ra khi xoá task.", error);
-            toast.error("Lỗi xảy ra khi xoá nhiệm vụ mới.");
-        }
-    };
+    //Call Hook
+    const { deleteTask, updateTaskContent, toggleTaskStatus, isLoading, tags } = useTask(handleTaskChanged);
 
-    const updateTask = async () => {
-        try {
-            setIsEditting(false);
-            await api.put(`/tasks/${task._id}`, {
-                title: updateTaskTitle,
-                status: task.status,
-                completedAt: task.completedAt
-            });
-            toast.success(`Nhiệm vụ đã đổi thành ${updateTaskTitle}`);
-            if (handleTaskChanged) {
-                await handleTaskChanged();
-            }
-        } catch (error) {
-            setIsEditting(true);
-            console.error("Lỗi xảy ra khi update task.", error);
-            toast.error("Lỗi xảy ra khi cập nhập nhiệm vụ.");
-        }
-    };
+    // Theo dõi giá trị prop cũ để reset state khi prop thay đổi (Thay thế useEffect)
+    const [prevTask, setPrevTask] = useState(task);
 
-    const toggleTaskCompleteButton = async () => {
-        try {
-        if (task.status === "active") {
-            await api.put(`/tasks/${task._id}`, {
-            status: "complete",
-            //lưu thời gian hoàn thành và lưu = giờ quốc tế
-            completedAt: new Date().toISOString(),
-        });
-
-        toast.success(`${task.title} đã hoàn thành.`);
-        } else {
-            await api.put(`/tasks/${task._id}`, {
-            status: "active",
-            completedAt: null,
-        });
-        toast.success(`${task.title} đã đổi sang chưa hoàn thành.`);
-      }
-
-        handleTaskChanged();
-    } catch (error) {
-        console.error("Lỗi xảy ra khi update task.", error);
-        toast.error("Lỗi xảy ra khi cập nhập nhiệm vụ.");
+    if (itemChanged(prevTask, task)) {
+        setPrevTask(task);
+        setTitleInput(task.title || "");
+        setTagInput(task.tag || "general");
     }
-  };
 
-    const handleKeyPress = (event) => {
-        if (event.key === "Enter") {
-            updateTask();
+    function itemChanged(prev, current) {
+        return prev.title !== current.title || prev.tag !== current.tag || prev._id !== current._id;
+    }
+
+    const handleSaveTitle = async () => {
+        //Nếu rỗng hoặc không đổi thì coi như Hủy
+        if ((!titleInput.trim() || titleInput === task.title) && tagInput === task.tag) {
+            handleCancelEdit();
+            return;
+        }
+
+        const success = await updateTaskContent(task, {
+            title: titleInput,
+            tag: tagInput
+        });
+
+        if (success) {
+            setIsEditting(false);
         }
     };
+
+    const handleCancelEdit = () => {
+        setIsEditting(false);
+        setTitleInput(task.title || "");
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            handleSaveTitle();
+        } else if (event.key === "Escape") {
+            handleCancelEdit();
+        }
+    };
+
+    const taskTag = tags.find(t => t.value === task.tag) || tags[0];
 
     return (
         <Card
-        className={cn(
-            "p-4 bg-gradient-card border-0 shadow-custom-md hover:shadow-custom-lg transition-all duration-200 animate-fade-in group",
-            task.status === "complete" && "opacity-75"
-        )}
+            className={cn(
+                "p-4 bg-gradient-card border-0 shadow-custom-md hover:shadow-custom-lg transition-all duration-200 animate-fade-in group",
+                task.status === "complete" && "opacity-75"
+            )}
             style={{ animationDelay: `${index * 50}ms` }}
         >
-        <div className="flex items-center gap-4">
-            {/* nút tròn */}
-            <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                    "flex-shrink-0 size-8 rounded-full transition-all duration-200",
-                    task.status === "complete"
-                    ? "text-success hover:text-success/80"
-                    : "text-muted-foreground hover:text-primary"
-                )}
-                onClick={toggleTaskCompleteButton}
-            >
-                {task.status === "complete" ? (
-                <CheckCircle2 className="size-5" />
-            ) : (
-                <Circle className="size-5" />
-            )}
-            </Button>
-
-            {/* hiển thị hoặc chỉnh sửa tiêu đề */}
-            <div className="flex-1 min-w-0">
-                {isEditting ? (
-                    <Input
-                        placeholder="Cần phải làm gì?"
-                        className="flex-1 h-12 text-base border-border/50 focus:border-primary/50 focus:ring-primary/20"
-                        type="text"
-                        value={updateTaskTitle}
-                        onChange={(e) => setUpdateTaskTitle(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        onBlur={() => {
-                            setIsEditting(false);
-                            setUpdateTaskTitle(task.title || "");
-                        }}
-                    />
-                ) : (
-                    <p
-                        className={cn(
-                            "text-base transition-all duration-200",
-                            task.status === "complete"
-                            ? "line-through text-muted-foreground"
-                            : "text-foreground"
-                        )}
-                    >
-                        {task.title}
-                    </p>
-                )}
-
-                {/* ngày tạo & ngày hoàn thành */}
-                <div className="flex items-center gap-2 mt-1">
-                    <Calendar className="size-3 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">
-                        {new Date(task.createdAt).toLocaleString()}
-                    </span>
-                    {task.completedAt && (
-                    <>
-                        <span className="text-xs text-muted-foreground"> - </span>
-                        <Calendar className="size-3 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">
-                            {new Date(task.completedAt).toLocaleString()}
-                        </span>
-                    </>
+            <div className="flex items-center gap-4">
+                {/* nút tròn */}
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                        "flex-shrink-0 size-8 rounded-full transition-all duration-200",
+                        task.status === "complete"
+                            ? "text-success hover:text-success/80"
+                            : "text-muted-foreground hover:text-primary"
                     )}
+                    onClick={() => toggleTaskStatus(task)}
+                    disabled={isLoading || isEditting}
+                >
+                    {task.status === "complete" ? (
+                        <CheckCircle2 className="size-5" />
+                    ) : (
+                        <Circle className="size-5" />
+                    )}
+                </Button>
+
+                {/* hiển thị hoặc chỉnh sửa tiêu đề */}
+                <div className="flex-1 min-w-0">
+                    {isEditting ? (
+                        <Input
+                            placeholder="Cần phải làm gì?"
+                            className="flex-1 h-12 text-base border-border/50 focus:border-primary/50 focus:ring-primary/20"
+                            type="text"
+                            value={titleInput}
+                            onChange={(e) => setTitleInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            onBlur={handleCancelEdit} // Click ra ngoài sẽ hủy edit
+                        />
+                    ) : (
+                        <p
+                            className={cn(
+                                "text-base transition-all duration-200 select-none cursor-text", // Thay đổi cursor để user biết không click được
+                                task.status === "complete"
+                                    ? "line-through text-muted-foreground"
+                                    : "text-foreground"
+                            )}
+                        >
+                            {task.title}
+                        </p>
+                    )}
+
+                    {/* ngày tạo & ngày hoàn thành */}
+                    <div className="flex items-center gap-4 mt-1">
+                        {/* Ngày tạo (Cũ) */}
+                        <div className="flex items-center gap-1">
+                            <Calendar className="size-3 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">
+                                Tạo: {new Date(task.createdAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                        </div>
+
+                        {/* --- HIỂN THỊ DEADLINE (MỚI) --- */}
+                        {task.dueDate && task.status !== 'complete' && (
+                            <div className={cn(
+                                "flex items-center gap-1",
+                                isOverdue(task.dueDate) ? "text-destructive font-bold" : "text-orange-500"
+                            )}>
+                                <CalendarClock className="size-3" />
+                                <span className="text-xs">
+                                    Hạn: {new Date(task.dueDate).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                            </div>
+                        )}
+
+                        {/* --- TAG DISPLAY (NEW) --- */}
+
+                        {/* --- TAG DISPLAY --- */}
+                        {/* Trong chế độ Edit, hiển thị Popover để chọn Tag */}
+                        {isEditting ? (
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <div
+                                        className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] border border-white/10 cursor-pointer hover:opacity-80 transition-opacity"
+                                        onMouseDown={(e) => e.preventDefault()} // Ngăn mất focus ở Input khi click vào đây
+                                    >
+                                        <span
+                                            className="w-1.5 h-1.5 rounded-full"
+                                            style={{ backgroundColor: tags.find(t => t.value === tagInput)?.dot || tags[0].dot }}
+                                        ></span>
+                                        <span style={{ color: tags.find(t => t.value === tagInput)?.dot || tags[0].dot }} className="font-medium">
+                                            {tags.find(t => t.value === tagInput)?.label || "Chung"}
+                                        </span>
+                                    </div>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-48 p-2" align="start">
+                                    <div className="flex flex-col gap-2">
+                                        <span className="text-xs font-medium text-muted-foreground px-2">Chọn nhãn</span>
+                                        {tags.map((tag) => (
+                                            <div
+                                                key={tag.value}
+                                                className={`flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-secondary transition-colors ${tagInput === tag.value ? 'bg-secondary' : ''}`}
+                                                onClick={() => setTagInput(tag.value)}
+                                                onMouseDown={(e) => e.preventDefault()} // Ngăn mất focus ở Input khi chọn tag
+                                            >
+                                                <div
+                                                    className="h-3 w-3 rounded-full"
+                                                    style={{ backgroundColor: tag.dot }}
+                                                />
+                                                <span className="text-sm">{tag.label}</span>
+                                                {tagInput === tag.value && (
+                                                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        ) : (
+                            // Chế độ xem: Chỉ hiển thị nếu tag khác general (hoặc tùy logic cũ)
+                            task.tag && task.tag !== 'general' && (
+                                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] border border-white/10">
+                                    <span
+                                        className="w-1.5 h-1.5 rounded-full"
+                                        style={{ backgroundColor: taskTag.dot }}
+                                    ></span>
+                                    <span style={{ color: taskTag.dot }} className="font-medium">
+                                        {taskTag.label}
+                                    </span>
+                                </div>
+                            )
+                        )}
+                    </div>
+                </div>
+
+                {/* nút chỉnh và xoá */}
+                <div className="hidden gap-2 group-hover:inline-flex animate-slide-up">
+                    {/* nút edit */}
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-info"
+                        onClick={() => {
+                            setIsEditting(true);
+                            setTitleInput(task.title || "");
+                            setTagInput(task.tag || "general");
+                        }}
+                    >
+                        <SquarePen className="size-4" />
+                    </Button>
+
+                    {/* nút xoá */}
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-destructive"
+                        onClick={() => deleteTask(task._id)}
+                    >
+                        <Trash2 className="size-4" />
+                    </Button>
                 </div>
             </div>
-
-            {/* nút chỉnh và xoá */}
-            <div className="hidden gap-2 group-hover:inline-flex animate-slide-up">
-            {/* nút edit */}
-            <Button
-                variant="ghost"
-                size="icon"
-                className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-info"
-                onClick={() => {
-                setIsEditting(true);
-                setUpdateTaskTitle(task.title || "");
-                }}
-            >
-                <SquarePen className="size-4" />
-            </Button>
-
-            {/* nút xoá */}
-            <Button
-                variant="ghost"
-                size="icon"
-                className="flex-shrink-0 transition-colors size-8 text-muted-foreground hover:text-destructive"
-                onClick={() => deleteTask(task._id)}
-            >
-                <Trash2 className="size-4" />
-            </Button>
-        </div>
-      </div>
-    </Card>
-  );
+        </Card>
+    );
 };
 
 export default TaskCard;

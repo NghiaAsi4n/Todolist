@@ -6,29 +6,26 @@
 
 @layer base {
   :root {
-    /* Modern todo app color palette */
+    /* --- LIGHT MODE --- */
     --background: 240 10% 98%;
-    --background-secondary: 245 15% 96%;
-    --foreground: 215 28% 27%; /* slate 700 */
+    --foreground: 215 28% 27%;
 
     --card: 0 0% 100%;
     --card-foreground: 215 28% 27%;
-    --card-shadow: 218 36% 18%; /* slate 800 */
+    --card-shadow: 218 36% 18%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 215 28% 27%;
 
-    /* Beautiful gradient colors */
+    /* QUAY VỀ MÀU TÍM NGUYÊN BẢN (Original Purple) */
     --primary: 258 89% 65%;
-    --primary-light: 255 92% 76%;
-    --primary-dark: 263 69% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 240 5% 96%;
     --secondary-foreground: 240 6% 10%;
 
     --muted: 240 5% 96%;
-    --muted-foreground: 215 18% 47%; /* slate-500 */
+    --muted-foreground: 215 18% 47%;
 
     --accent: 204 94% 94%;
     --accent-foreground: 204 100% 40%;
@@ -36,65 +33,25 @@
     --destructive: 0 85% 60%;
     --destructive-foreground: 0 0% 98%;
 
+    /* Màu xanh lá đậm cho Light Mode */
     --success: 142 76% 36%;
     --success-foreground: 0 0% 98%;
 
-    --info: 226, 100%, 63%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 214 32% 91%; /* slate-200 */
+    --border: 214 32% 91%;
     --input: 210 40% 96%;
     --ring: 258 89% 65%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(255 92% 76%) 0%,
-      hsl(263 69% 50%) 100%
-    );
-    --gradient-background: linear-gradient(
-      135deg,
-      hsl(240 10% 98%) 0%,
-      hsl(245 15% 96%) 100%
-    );
-    --gradient-card: linear-gradient(
-      135deg,
-      hsl(0 0% 100%) 0%,
-      hsl(240 10% 99%) 100%
-    );
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(218 36% 18% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(218 36% 18% / 0.1),
-      0 2px 4px -2px hsl(218 36% 18% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(218 36% 18% / 0.1),
-      0 4px 6px -4px hsl(218 36% 18% / 0.1);
-    --shadow-glow: 0 0 20px hsl(258 89% 65% / 0.3);
-
-    /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Gradient Tím cũ cho Light Mode */
+    --gradient-primary: linear-gradient(135deg,
+        hsl(255 92% 76%) 0%,
+        hsl(263 69% 50%) 100%);
+    --gradient-card: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
   }
 
   .dark {
+    /* --- DARK MODE --- */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -104,32 +61,285 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* MÀU MỚI: TÍM NEON (Electric Purple) - Thay cho màu xanh/hồng cũ */
+    /* Màu này sáng hơn màu tím gốc một chút để nổi trên nền đen */
+    --primary: 270 95% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Gradient Tím Neon cho Dark Mode */
+    --gradient-primary: linear-gradient(135deg,
+        hsl(270 95% 65%) 0%,
+        hsl(260 90% 50%) 100%);
+
+    --input: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --muted-foreground: 215 20.2% 70%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
+    /* Badge Hoàn thành: Xanh lá Neon */
+    --success: 142 70% 60%;
+    --success-foreground: 142 80% 10%;
+
+    /* Badge Đang làm: Xanh dương Neon */
+    --info: 199 89% 60%;
+    --accent: 199 89% 60%;
+    --accent-foreground: 199 89% 10%;
+
     --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ring: 270 95% 65%;
+
+    --gradient-card: linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%);
+  }
+
+  /* 1. KHUNG CHÍNH */
+  .react-datepicker {
+    font-family: inherit !important;
+    background-color: #1e1e2e !important;
+    border: 1px solid #4f4f56 !important;
+    border-radius: 12px !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    overflow: hidden !important;
+    background-color: #ffffff !important;
+    /* Nền trắng sạch */
+    border: 1px solid #e9d5ff !important;
+    /* Viền tím nhạt */
+    color: #581c87 !important;
+    /* Chữ tím đậm */
+  }
+
+  .dark .react-datepicker {
+    background-color: #1e1e2e !important;
+    border: 1px solid #4f4f56 !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  }
+
+
+  /* 2. HEADER BÊN LỊCH */
+  .react-datepicker__header {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    border-radius: 0 !important;
+    background: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%) !important;
+    border-bottom: 1px solid #e9d5ff !important;
+  }
+
+  .dark .react-datepicker__header {
+    background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%) !important;
+    border-bottom: 1px solid #5a5a6a !important;
+  }
+
+  /* --- FIX MŨI TÊN BỊ LỆCH LÊN TRÊN --- */
+  .react-datepicker__navigation {
+    /* Đẩy mũi tên xuống 11px để cân với chữ February */
+    top: 8px !important;
+  }
+
+  .react-datepicker__navigation-icon::before {
+    border-color: #a78bfa !important;
+  }
+
+  /* 3. HEADER BÊN GIỜ (Time) - FIX LỖI LỆCH SO VỚI THÁNG */
+  .react-datepicker__time-container .react-datepicker__header {
+    background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%) !important;
+    border-bottom: 1px solid #5a5a6a !important;
+    color: #a78bfa !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding-top: 12px !important;
+    margin: 0 !important;
+    background: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%) !important;
+    border-bottom: 1px solid #e9d5ff !important;
+    color: #9333ea !important;
+    /* Chữ Tím đậm */
+
+  }
+
+  .dark .react-datepicker__time-container .react-datepicker__header {
+    background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%) !important;
+    border-bottom: 1px solid #5a5a6a !important;
+    color: #a78bfa !important;
+  }
+
+
+  /* Màu chữ Header chung */
+  .react-datepicker__current-month,
+  .react-datepicker-year-header,
+  .react-datepicker-time__header {
+    color: #a78bfa !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    color: #9333ea !important;
+  }
+
+  /* 4. PHẦN BODY LỊCH */
+  .react-datepicker__day-name {
+    width: 32px !important;
+    line-height: 28px !important;
+    margin: 0.166rem !important;
+    color: #6b7280 !important;
+  }
+
+  .dark .react-datepicker__day-name {
+    color: #9ca3af !important;
+  }
+
+  .react-datepicker__day {
+    width: 32px !important;
+    line-height: 28px !important;
+    margin: 0.166rem !important;
+    color: #374151 !important;
+  }
+
+  .dark .react-datepicker__day {
+    color: #e2e8f0 !important;
+  }
+
+
+  .react-datepicker__day:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%) !important;
+    color: #fff !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3) !important;
+  }
+
+  .react-datepicker__day--selected {
+    background-color: rgba(139, 92, 246, 0.2) !important;
+    border: 2px solid #8b5cf6 !important;
+  }
+
+  .react-datepicker__day--keyboard-selected {
+    background-color: rgba(139, 92, 246, 0.2) !important;
+    border: 2px solid #8b5cf6 !important;
+  }
+
+  .react-datepicker__day--outside-month {
+    color: #4b5563 !important;
+    opacity: 0.5 !important;
+  }
+
+  .react-datepicker__month-container {
+    float: none !important;
+  }
+
+  /* 5. CỘT GIỜ (TIME LIST) - COMPACT */
+  .react-datepicker__time-container {
+    border-left: 1px solid #4f4f56 !important;
+    width: 90px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-left: 1px solid #e9d5ff !important;
+  }
+
+  .dark .react-datepicker__time-container {
+    border-left: 1px solid #4f4f56 !important;
+  }
+
+  .react-datepicker__time-container .react-datepicker__time {
+    background-color: #1e1e2e !important;
+    border-radius: 0 !important;
+    height: 230px !important;
+    overflow-y: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    background-color: #ffffff !important;
+    padding-top: 2px !important;
+  }
+
+  .dark .react-datepicker__time-container .react-datepicker__time {
+    background-color: #1e1e2e !important;
+    padding-top: 2px !important;
+  }
+
+  /* Ẩn thanh cuộn Chrome */
+  .react-datepicker__time-container .react-datepicker__time::-webkit-scrollbar,
+  .react-datepicker__time-container ::-webkit-scrollbar {
+    display: none !important;
+    width: 0px !important;
+    background: transparent !important;
+  }
+
+  /* 6. CÁC Ô GIỜ (ITEMS) */
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item {
+    color: #e2e8f0 !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 8px !important;
+    margin: 3px 7px !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    color: #374151 !important;
+  }
+
+  .dark .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item {
+    color: #e2e8f0 !important;
+  }
+
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%) !important;
+    color: #fff !important;
+    transform: translateX(2px) !important;
+  }
+
+  .dark .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%) !important;
+  }
+
+  .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%) !important;
+    color: white !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4) !important;
+  }
+
+  .dark .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item--selected {
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%) !important;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4) !important;
+  }
+
+  /* 7. INPUT FOCUS */
+  .react-datepicker__input-container input:focus {
+    outline: none !important;
+    border-color: #8b5cf6 !important;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3) !important;
+  }
+
+  .react-datepicker__triangle {
+    display: none !important;
+  }
+
+  /* Animation khi mở datepicker */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .react-datepicker {
+    animation: fadeIn 0.2s ease-out !important;
   }
 }
 

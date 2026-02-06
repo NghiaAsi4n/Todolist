@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 export const connectDB = async () => {
     try{
         await mongoose.connect(process.env.MONGODB_CONNECTIONSTRING);
-        console.log("lien ket DB thanh cong!");
+        console.log("Kết nối database thành công!");
     }
     catch (error) {
-        console.error("loi khi lien ket DB:", error)
+        console.error("Lỗi khi kết nối database:", error)
         process.exit(1); //exit with error
     }
 };

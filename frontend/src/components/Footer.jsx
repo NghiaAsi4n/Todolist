@@ -6,7 +6,7 @@ export const Footer = ({completedTasksCount = 0, activeTasksCount = 0}) => {
             {
             completedTasksCount + activeTasksCount > 0 && (
                 <div className = "text-center">
-                    <p className = "text-sm text-muted-foreground">
+                    <p className = "text-sm text-muted-foreground dark:text-slate-50 transition-colors">
                         { completedTasksCount > 0 && (
                         <>
                             Tuyệt vời! Bạn đã hoàn thành {completedTasksCount} việc
