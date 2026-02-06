@@ -1,4 +1,5 @@
 import Task from "../models/Task.js";
+import mongoose from "mongoose";
 
 const getStartDateByFilter = (filter) => {
   const now = new Date();
@@ -23,10 +24,11 @@ const getStartDateByFilter = (filter) => {
 
 const getAllTasks = async (userId, filter, search) => {
   const startDate = getStartDateByFilter(filter);
+  const userObjectId = new mongoose.Types.ObjectId(userId);
 
   //Query để lấy task của user đó
   const query = {
-    userId: userId,
+    userId: userObjectId,
     ...(startDate ? { createdAt: { $gte: startDate } } : {}),
     ...(search ? { title: { $regex: search, $options: "i" } } : {}) // Tìm kiếm theo title không phân biệt hoa thường
   };
@@ -43,7 +45,11 @@ const getAllTasks = async (userId, filter, search) => {
   ]);
 
   //Xử lý khi mảng rỗng (tránh crash nếu user mới chưa có task)
-  const tasks = result[0].tasks;
+  if (!result || result.length === 0) {
+    return { tasks: [], activeCount: 0, completeCount: 0 };
+  }
+
+  const tasks = result[0].tasks || [];
   const activeCount = result[0].activeCount[0]?.count || 0;
   const completeCount = result[0].completeCount[0]?.count || 0;
 
@@ -86,9 +92,10 @@ const deleteTask = async (userId, taskId) => {
 const getAnalytics = async (userId) => {
   const now = new Date();
   const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+  const userObjectId = new mongoose.Types.ObjectId(userId);
 
   const result = await Task.aggregate([
-    { $match: { userId: userId } },
+    { $match: { userId: userObjectId } },
     {
       $facet: {
         // Tổng quan: Active vs Completed
