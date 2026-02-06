@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth"; // Import hook useAuth
 
 const GoogleAuthButton = () => {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  
+
   // Lấy toàn bộ data và action từ useAuth
   const { user, loading, loginGoogle, logout } = useAuth();
 
@@ -14,7 +14,7 @@ const GoogleAuthButton = () => {
   const handleLoginSuccess = async (credentialResponse) => {
     // Gọi hàm login từ hook
     const success = await loginGoogle(credentialResponse?.credential);
-    
+
     // Nếu login thành công, bắn sự kiện để HomePage biết mà load lại Task
     // (Giữ lại dòng này để tương thích với HomePage hiện tại)
     if (success) {
@@ -43,11 +43,14 @@ const GoogleAuthButton = () => {
             referrerPolicy="no-referrer"
           />
         ) : null}
-        <span className="text-sm text-muted-foreground truncate max-w-[180px] dark:text-slate-200">
+        <span className="text-sm text-muted-foreground truncate max-w-[180px] dark:text-slate-200 hidden md:block">
           {user.name || user.email}
         </span>
-        <Button variant="outline" size="sm" onClick={handleLogout}>
-          Đăng xuất
+        <Button variant="outline" size="sm" onClick={handleLogout} className="px-2 md:px-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
+          <span className="hidden md:inline">Đăng xuất</span>
+          <span className="md:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
+          </span>
         </Button>
       </div>
     );

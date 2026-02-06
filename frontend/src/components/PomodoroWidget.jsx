@@ -49,13 +49,9 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
     const saveSettings = (e) => {
         e?.preventDefault();
         e?.stopPropagation();
-
         try {
             updateSettings(localSettings);
-
             toast.success('Pomodoro mới đã được thêm vào.');
-
-            // Đóng popover
             setSettingsOpen(false);
         } catch (error) {
             console.error('Error saving settings:', error);
@@ -118,23 +114,24 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
     const ModeIcon = config.icon;
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 duration-500">
+        <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 animate-in slide-in-from-bottom-5 duration-500">
             <Card className={cn(
-                "w-[380px] backdrop-blur-xl border-2 transition-all duration-700 overflow-hidden",
+                // Mobile: Full Width, Desktop: 340px (reduced from 380px)
+                "w-full sm:w-[340px] max-w-[calc(100vw-2rem)] backdrop-blur-xl border-2 transition-all duration-700 overflow-hidden",
                 config.bg,
                 config.border,
                 config.shadow,
                 isActive && config.glow
             )}>
-                <CardContent className="p-8 relative">
+                <CardContent className="p-3 sm:p-8 relative">
                     {/* Decorative Background */}
                     <div className="absolute inset-0 opacity-20 dark:opacity-25 pointer-events-none">
                         <div className={cn(
-                            "absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl bg-gradient-to-br",
+                            "absolute top-0 right-0 w-32 h-32 sm:w-40 sm:h-40 rounded-full blur-3xl bg-gradient-to-br",
                             config.gradient
                         )} />
                         <div className={cn(
-                            "absolute bottom-0 left-0 w-32 h-32 rounded-full blur-3xl bg-gradient-to-tr",
+                            "absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 rounded-full blur-3xl bg-gradient-to-tr",
                             config.gradient
                         )} />
                     </div>
@@ -143,22 +140,22 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="absolute top-3 right-3 h-8 w-8 rounded-full hover:bg-gray-200/60 dark:hover:bg-white/10 transition-all hover:rotate-90 z-10 text-gray-600 dark:text-gray-400"
+                        className="absolute top-2 right-2 sm:top-3 sm:right-3 h-9 w-9 sm:h-8 sm:w-8 rounded-full hover:bg-gray-200/60 dark:hover:bg-white/10 transition-all hover:rotate-90 z-50 text-gray-600 dark:text-gray-400 touch-manipulation"
                         onClick={onClose}
                     >
-                        <X className="h-4 w-4" />
+                        <X className="h-5 w-5 sm:h-4 sm:w-4" />
                     </Button>
 
                     {/* Header with Icon */}
-                    <div className="text-center mb-6 relative z-10">
+                    <div className="text-center mb-2 sm:mb-6 relative z-10">
                         <div className={cn(
-                            "inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br shadow-lg mb-3 transition-transform hover:scale-110 duration-300",
+                            "inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br shadow-lg mb-2 sm:mb-3 transition-transform hover:scale-110 duration-300",
                             config.gradient
                         )}>
-                            <ModeIcon className="w-7 h-7 text-white drop-shadow" />
+                            <ModeIcon className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow" />
                         </div>
                         <h3 className={cn(
-                            "text-lg font-bold tracking-tight",
+                            "text-base sm:text-lg font-bold tracking-tight",
                             config.text
                         )}>
                             {config.label}
@@ -166,7 +163,7 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                     </div>
 
                     {/* Mode Tabs */}
-                    <div className="flex justify-center gap-2 mb-8 bg-white/80 dark:bg-gray-900/40 p-1.5 rounded-2xl backdrop-blur-md border border-gray-200/60 dark:border-gray-700/40 shadow-sm relative z-10">
+                    <div className="flex justify-center gap-1.5 sm:gap-2 mb-2 sm:mb-8 bg-white/80 dark:bg-gray-900/40 p-1 sm:p-1.5 rounded-2xl backdrop-blur-md border border-gray-200/60 dark:border-gray-700/40 shadow-sm relative z-10">
                         {Object.values(POMODORO_MODES).map((m) => {
                             const Icon = m.id === 'focus' ? Brain : m.id === 'short' ? Coffee : Timer;
                             return (
@@ -174,13 +171,13 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                                     key={m.id}
                                     onClick={() => changeMode(m.id)}
                                     className={cn(
-                                        "flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1.5",
+                                        "flex-1 px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center justify-center gap-1 sm:gap-1.5",
                                         mode === m.id
                                             ? "bg-white dark:bg-gray-800 shadow-md text-gray-900 dark:text-white scale-105"
                                             : "text-gray-600 dark:text-gray-400 hover:bg-gray-100/60 dark:hover:bg-gray-800/40 hover:scale-102"
                                     )}
                                 >
-                                    <Icon className="w-3.5 h-3.5" />
+                                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                                     <span className="hidden sm:inline">{m.label}</span>
                                 </button>
                             );
@@ -188,27 +185,34 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                     </div>
 
                     {/* Timer Display */}
-                    <div className="text-center mb-6 relative">
+                    <div className="text-center mb-2 sm:mb-6 relative">
                         {/* Outer Glow Ring */}
                         <div className={cn(
-                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full blur-3xl transition-opacity duration-1000",
+                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 sm:w-64 sm:h-64 rounded-full blur-3xl transition-opacity duration-1000",
                             isActive ? "opacity-25 dark:opacity-30" : "opacity-10 dark:opacity-15",
                             `bg-gradient-to-br ${config.gradient}`
                         )} />
 
                         {/* Progress Circle Background */}
-                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 -rotate-90 pointer-events-none">
+                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-56 sm:h-56 -rotate-90 pointer-events-none">
+                            <circle
+                                cx="64" cy="64" r="56"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="5"
+                                className={cn(config.circleBg, "sm:hidden")}
+                            />
                             <circle
                                 cx="112" cy="112" r="104"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="6"
-                                className={config.circleBg}
+                                className={cn(config.circleBg, "hidden sm:block")}
                             />
                         </svg>
 
                         {/* Progress Circle Active */}
-                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 -rotate-90 pointer-events-none">
+                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-56 sm:h-56 -rotate-90 pointer-events-none">
                             <defs>
                                 <linearGradient id="progressGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stopColor={config.ringLight} stopOpacity="0.9" />
@@ -219,13 +223,41 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                                     <stop offset="100%" stopColor={config.ringDark} stopOpacity="0.7" />
                                 </linearGradient>
                             </defs>
+                            {/* Mobile Circle */}
+                            <circle
+                                cx="64" cy="64" r="56"
+                                fill="none"
+                                strokeWidth="6"
+                                strokeDasharray={2 * Math.PI * 56}
+                                strokeDashoffset={2 * Math.PI * 56 * (1 - getProgress() / 100)}
+                                className="transition-all duration-1000 ease-out dark:hidden sm:hidden"
+                                strokeLinecap="round"
+                                stroke="url(#progressGradientLight)"
+                                style={{
+                                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+                                }}
+                            />
+                            <circle
+                                cx="64" cy="64" r="56"
+                                fill="none"
+                                strokeWidth="6"
+                                strokeDasharray={2 * Math.PI * 56}
+                                strokeDashoffset={2 * Math.PI * 56 * (1 - getProgress() / 100)}
+                                className="transition-all duration-1000 ease-out hidden dark:block sm:hidden"
+                                strokeLinecap="round"
+                                stroke="url(#progressGradientDark)"
+                                style={{
+                                    filter: 'drop-shadow(0 0 6px currentColor)'
+                                }}
+                            />
+                            {/* Desktop Circle */}
                             <circle
                                 cx="112" cy="112" r="104"
                                 fill="none"
                                 strokeWidth="8"
                                 strokeDasharray={2 * Math.PI * 104}
                                 strokeDashoffset={2 * Math.PI * 104 * (1 - getProgress() / 100)}
-                                className="transition-all duration-1000 ease-out dark:hidden"
+                                className="transition-all duration-1000 ease-out dark:hidden hidden sm:block"
                                 strokeLinecap="round"
                                 stroke="url(#progressGradientLight)"
                                 style={{
@@ -238,7 +270,7 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                                 strokeWidth="8"
                                 strokeDasharray={2 * Math.PI * 104}
                                 strokeDashoffset={2 * Math.PI * 104 * (1 - getProgress() / 100)}
-                                className="transition-all duration-1000 ease-out hidden dark:block"
+                                className="transition-all duration-1000 ease-out hidden dark:block sm:dark:block"
                                 strokeLinecap="round"
                                 stroke="url(#progressGradientDark)"
                                 style={{
@@ -247,10 +279,10 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                             />
                         </svg>
 
-                        {/* Timer Text - Ở GIỮA HÌNH TRÒN */}
-                        <div className="relative z-10 flex items-center justify-center h-56">
+                        {/* Timer Text */}
+                        <div className="relative z-10 flex items-center justify-center h-32 sm:h-56">
                             <div className={cn(
-                                "text-7xl font-black tabular-nums tracking-tighter bg-clip-text text-transparent bg-gradient-to-br transition-all duration-500 select-none",
+                                "text-4xl sm:text-7xl font-black tabular-nums tracking-tighter bg-clip-text text-transparent bg-gradient-to-br transition-all duration-500 select-none",
                                 config.gradient,
                                 "drop-shadow-sm"
                             )}>
@@ -259,33 +291,33 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                         </div>
                     </div>
 
-                    {/* Status Badge - DƯỚI HÌNH TRÒN */}
-                    <div className="flex justify-center mb-6 relative z-10">
+                    {/* Status Badge */}
+                    <div className="flex justify-center mb-2 sm:mb-6 relative z-10">
                         <div className={cn(
-                            "inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300",
+                            "inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300",
                             isActive
                                 ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                                 : "bg-gray-200/90 dark:bg-gray-700/70 text-gray-700 dark:text-gray-300 shadow-sm"
                         )}>
-                            {isActive && <Sparkles className="w-3 h-3 animate-pulse" />}
+                            {isActive && <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 animate-pulse" />}
                             {isActive ? 'Đang hoạt động' : 'Tạm dừng'}
                         </div>
                     </div>
 
                     {/* Controls */}
-                    <div className="flex items-center justify-center gap-3 relative z-10">
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 relative z-10">
                         {/* Play/Pause Button */}
                         <Button
                             onClick={toggleTimer}
                             className={cn(
-                                "w-16 h-16 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 text-white border-0",
+                                "w-12 h-12 sm:w-16 sm:h-16 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 text-white border-0",
                                 `bg-gradient-to-br ${config.gradient}`,
                                 "hover:brightness-110 active:scale-105"
                             )}
                         >
                             {isActive ?
-                                <Pause className="w-7 h-7 fill-current" /> :
-                                <Play className="w-7 h-7 fill-current ml-0.5" />
+                                <Pause className="w-5 h-5 sm:w-7 sm:h-7 fill-current" /> :
+                                <Play className="w-5 h-5 sm:w-7 sm:h-7 fill-current ml-0.5" />
                             }
                         </Button>
 
@@ -294,10 +326,10 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                             variant="ghost"
                             size="icon"
                             onClick={resetTimer}
-                            className="w-12 h-12 rounded-xl bg-white/60 dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all hover:rotate-180 duration-500 text-gray-700 dark:text-gray-300 shadow-sm"
+                            className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/60 dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all hover:rotate-180 duration-500 text-gray-700 dark:text-gray-300 shadow-sm"
                             title="Đặt lại"
                         >
-                            <RotateCcw className="w-5 h-5" />
+                            <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
                         </Button>
 
                         {/* Settings Button */}
@@ -306,44 +338,44 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="w-12 h-12 rounded-xl bg-white/60 dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all hover:rotate-90 duration-300 text-gray-700 dark:text-gray-300 shadow-sm"
+                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/60 dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all hover:rotate-90 duration-300 text-gray-700 dark:text-gray-300 shadow-sm"
                                     title="Cài đặt"
                                 >
-                                    <SettingsIcon className="w-5 h-5" />
+                                    <SettingsIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent
-                                className="w-80 p-5 backdrop-blur-xl bg-white/98 dark:bg-gray-900/98 border-gray-200/80 dark:border-gray-700/60 shadow-2xl rounded-2xl"
+                                className="w-[calc(100vw-2rem)] sm:w-80 p-4 sm:p-5 backdrop-blur-xl bg-white/98 dark:bg-gray-900/98 border-gray-200/80 dark:border-gray-700/60 shadow-2xl rounded-2xl"
                                 onOpenAutoFocus={(e) => e.preventDefault()}
+                                align="center"
                             >
-                                <div className="flex items-center gap-2 mb-5 pb-4 border-b border-gray-200 dark:border-gray-700">
+                                <div className="flex items-center gap-2 mb-4 sm:mb-5 pb-3 sm:pb-4 border-b border-gray-200 dark:border-gray-700">
                                     <div className={cn(
-                                        "w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
+                                        "w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md",
                                         config.gradient
                                     )}>
-                                        <SettingsIcon className="w-5 h-5 text-white" />
+                                        <SettingsIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                     </div>
-                                    <h4 className="font-bold text-base text-gray-800 dark:text-white">
+                                    <h4 className="font-bold text-sm sm:text-base text-gray-800 dark:text-white">
                                         Cài đặt thời gian
                                     </h4>
                                 </div>
-
-                                <div className="grid gap-3">
+                                <div className="grid gap-2.5 sm:gap-3">
                                     {Object.values(POMODORO_MODES).map((m) => {
                                         const Icon = m.id === 'focus' ? Brain : m.id === 'short' ? Coffee : Timer;
                                         return (
-                                            <div key={m.id} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200/50 dark:border-gray-700/50">
-                                                <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
-                                                <Label htmlFor={m.id} className="flex-1 font-medium text-sm text-gray-700 dark:text-gray-300">
+                                            <div key={m.id} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-xl bg-gray-50 dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors border border-gray-200/50 dark:border-gray-700/50">
+                                                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+                                                <Label htmlFor={m.id} className="flex-1 font-medium text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                                                     {m.label}
                                                 </Label>
-                                                <div className="flex items-center gap-1.5">
+                                                <div className="flex items-center gap-1 sm:gap-1.5">
                                                     <Input
                                                         id={m.id}
                                                         type="number"
                                                         min="1"
                                                         max="120"
-                                                        className="w-16 h-9 text-center font-semibold text-sm bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                                        className="w-14 h-8 sm:w-16 sm:h-9 text-center font-semibold text-xs sm:text-sm bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                                         value={localSettings[m.id]}
                                                         onChange={(e) => handleSettingsChange(m.id, e.target.value)}
                                                     />
@@ -352,18 +384,16 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                                             </div>
                                         );
                                     })}
-
                                     <Button
                                         type="button"
                                         onClick={saveSettings}
                                         className={cn(
-                                            "w-full mt-2 h-11 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]",
+                                            "w-full mt-1 sm:mt-2 h-10 sm:h-11 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]",
                                             `bg-gradient-to-r ${config.gradient} text-white border-0`
                                         )}
                                     >
                                         💾 Lưu cài đặt
                                     </Button>
-
                                     <p className="text-xs text-gray-500 dark:text-gray-400 text-center leading-relaxed px-2 bg-gray-100/50 dark:bg-gray-800/50 py-2 rounded-lg">
                                         💡 Thay đổi sẽ áp dụng khi bạn chuyển chế độ hoặc reset timer
                                     </p>
