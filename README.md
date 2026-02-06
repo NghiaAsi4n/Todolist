@@ -45,11 +45,16 @@
 ---
 
 ## 💡 Điểm sáng kỹ thuật (Technical Highlights)
-MongoDB Aggregation Pipeline ($facet):
-Tối ưu hóa hiệu năng bằng cách thực hiện 3 tác vụ thống kê (Đếm active/completed, Phân loại Tag, Chart data 7 ngày) chỉ trong một lần truy vấn Database.
-Concurrency Handling (Atomic Operations):
-Sử dụng findOneAndUpdate để xử lý Race Condition trong Cron Job. Đảm bảo không bao giờ gửi trùng lặp email ngay cả khi server scale nhiều instances.
-Secure Authentication Architecture:
-Sử dụng mô hình Proxy (Vercel Rewrites) kết hợp với HttpOnly Cookies.
-Cấu hình SameSite=Strict/Lax linh hoạt theo môi trường để chống tấn công XSS và CSRF.
+
+### 🚀 High-Performance Data Aggregation
+Thay vì thực hiện nhiều truy vấn rời rạc, dự án sử dụng **MongoDB Aggregation Pipeline** với stage **`$facet`** để xử lý song song 3 luồng dữ liệu phức tạp (Thống kê tổng quan, Phân bổ theo Tag, Biểu đồ xu hướng 7 ngày).
+> **Kết quả:** Giảm 66% số lần Round-trip tới Database, tối ưu hóa thời gian phản hồi API.
+
+### 🛡️ Secure Cross-Domain Authentication
+Giải quyết bài toán bảo mật khi tách rời Frontend (Vercel) và Backend (Render) bằng kiến trúc **Reverse Proxy** (Vercel Rewrites).
+* **Chống XSS:** Token được lưu trong **HttpOnly Cookie** (JavaScript không thể truy cập).
+* **Chống CSRF:** Cấu hình **SameSite Policy** (`Strict`/`Lax`) linh hoạt theo môi trường Dev/Prod.
+
+### ⚡ Concurrency & Data Integrity
+Xử lý vấn đề tranh chấp dữ liệu (Race Condition) trong các tác vụ nền (Cron Jobs) bằng kỹ thuật **Atomic Operations** (`findOneAndUpdate`). Đảm bảo tính nhất quán của dữ liệu và ngăn chặn việc gửi trùng lặp email thông báo ngay cả khi mở rộng Server (Scaling).
 
