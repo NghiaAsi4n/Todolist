@@ -1,5 +1,5 @@
 # 🚀 Pro Task Manager
-> Một hệ thống quản lý công việc toàn diện (All-in-one Ecosystem) tích hợp phương pháp Pomodoro, phân tích hiệu suất và hệ thống nhắc nhở tự động.
+> Một hệ thống quản lý hiệu suất công việc toàn diện tích hợp phương pháp Pomodoro và Dashboard thống kê trực quan. Tối ưu hóa trải nghiệm tìm kiếm thời gian thực, tự động gửi email thông báo tự động.
 
 ## 🔗 Demo
 * **Live App:** [https://todo-app-frontend-bice-five.vercel.app](https://todo-app-frontend-bice-five.vercel.app)
