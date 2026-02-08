@@ -26,7 +26,8 @@ export const useTask = (refreshTasks) => {
                 title: updates.title || task.title,
                 status: task.status,
                 completedAt: task.completedAt,
-                tag: updates.tag || task.tag
+                tag: updates.tag || task.tag,
+                note: updates.note !== undefined ? updates.note : task.note
             });
             toast.success("Cập nhật thành công!");
             if (refreshTasks) refreshTasks();

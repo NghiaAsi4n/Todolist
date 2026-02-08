@@ -2,21 +2,26 @@ import React, { useState } from "react";
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { Calendar, CheckCircle2, Circle, SquarePen, Trash2, CalendarClock, Tag } from "lucide-react";
+import { Calendar, CheckCircle2, Circle, SquarePen, Trash2, CalendarClock, Tag, StickyNote } from "lucide-react";
 import { Input } from "./ui/input";
 import { useTask } from "@/hooks/useTask";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Textarea } from "./ui/textarea";
 
 const isOverdue = (dateString) => {
     if (!dateString) return false;
     return new Date(dateString) < new Date();
 };
 
+import { useEffect, useRef } from "react";
+
 const TaskCard = ({ task, index, handleTaskChanged }) => {
     //State quản lý việc hiển thị input sửa và lưu giá trị đang nhập liệu
     const [isEditting, setIsEditting] = useState(false);
+    const cardRef = useRef(null); // Ref to track the card element
     const [titleInput, setTitleInput] = useState(task.title || "");
     const [tagInput, setTagInput] = useState(task.tag || "general");
+    const [noteInput, setNoteInput] = useState(task.note || "");
 
     //Call Hook
     const { deleteTask, updateTaskContent, toggleTaskStatus, isLoading, tags } = useTask(handleTaskChanged);
@@ -28,22 +33,24 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
         setPrevTask(task);
         setTitleInput(task.title || "");
         setTagInput(task.tag || "general");
+        setNoteInput(task.note || "");
     }
 
     function itemChanged(prev, current) {
-        return prev.title !== current.title || prev.tag !== current.tag || prev._id !== current._id;
+        return prev.title !== current.title || prev.tag !== current.tag || prev.note !== current.note || prev._id !== current._id;
     }
 
     const handleSaveTitle = async () => {
         //Nếu rỗng hoặc không đổi thì coi như Hủy
-        if ((!titleInput.trim() || titleInput === task.title) && tagInput === task.tag) {
+        if ((!titleInput.trim() || titleInput === task.title) && tagInput === task.tag && noteInput === task.note) {
             handleCancelEdit();
             return;
         }
 
         const success = await updateTaskContent(task, {
             title: titleInput,
-            tag: tagInput
+            tag: tagInput,
+            note: noteInput
         });
 
         if (success) {
@@ -54,6 +61,7 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
     const handleCancelEdit = () => {
         setIsEditting(false);
         setTitleInput(task.title || "");
+        setNoteInput(task.note || "");
     };
 
     const handleKeyDown = (event) => {
@@ -64,10 +72,28 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
         }
     };
 
+    // Click outside handler logic
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (isEditting && cardRef.current && !cardRef.current.contains(event.target)) {
+                // If clicking outside the card while editing, cancel edit
+                handleCancelEdit();
+            }
+        };
+
+        // Add event listener
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            // Clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isEditting]); // Re-run if isEditting changes
+
     const taskTag = tags.find(t => t.value === task.tag) || tags[0];
 
     return (
         <Card
+            ref={cardRef}
             className={cn(
                 "p-4 bg-gradient-card border-0 shadow-custom-md hover:shadow-custom-lg transition-all duration-200 animate-fade-in group",
                 task.status === "complete" && "opacity-75"
@@ -98,19 +124,27 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                 {/* hiển thị hoặc chỉnh sửa tiêu đề */}
                 <div className="flex-1 min-w-0">
                     {isEditting ? (
-                        <Input
-                            placeholder="Cần phải làm gì?"
-                            className="flex-1 h-12 text-base border-border/50 focus:border-primary/50 focus:ring-primary/20"
-                            type="text"
-                            value={titleInput}
-                            onChange={(e) => setTitleInput(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            onBlur={handleCancelEdit} // Click ra ngoài sẽ hủy edit
-                        />
+                        <div className="flex flex-col gap-2 w-full">
+                            <Input
+                                placeholder="Cần phải làm gì?"
+                                className="flex-1 h-12 text-base border-border/50 focus:border-primary/50 focus:ring-primary/20"
+                                type="text"
+                                value={titleInput}
+                                onChange={(e) => setTitleInput(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                            />
+                            <Textarea
+                                placeholder="Ghi chú..."
+                                value={noteInput}
+                                onChange={(e) => setNoteInput(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                className="text-sm bg-secondary/30 min-h-[60px]"
+                            />
+                        </div>
                     ) : (
                         <p
                             className={cn(
-                                "text-base transition-all duration-200 select-none cursor-text", // Thay đổi cursor để user biết không click được
+                                "text-base transition-all duration-200 select-none cursor-default",
                                 task.status === "complete"
                                     ? "line-through text-muted-foreground"
                                     : "text-foreground"
@@ -121,8 +155,8 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                     )}
 
                     {/* ngày tạo & ngày hoàn thành */}
-                    <div className="flex items-center gap-4 mt-1">
-                        {/* Ngày tạo (Cũ) */}
+                    <div className="flex items-center gap-3 mt-1 flex-wrap">
+                        {/* Ngày tạo */}
                         <div className="flex items-center gap-1">
                             <Calendar className="size-3 text-muted-foreground" />
                             <span className="text-xs text-muted-foreground">
@@ -130,7 +164,7 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                             </span>
                         </div>
 
-                        {/* --- HIỂN THỊ DEADLINE (MỚI) --- */}
+                        {/* Deadline */}
                         {task.dueDate && task.status !== 'complete' && (
                             <div className={cn(
                                 "flex items-center gap-1",
@@ -143,63 +177,83 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                             </div>
                         )}
 
-                        {/* --- TAG DISPLAY (NEW) --- */}
-
-                        {/* --- TAG DISPLAY --- */}
-                        {/* Trong chế độ Edit, hiển thị Popover để chọn Tag */}
-                        {isEditting ? (
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <div
-                                        className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] border border-white/10 cursor-pointer hover:opacity-80 transition-opacity"
-                                        onMouseDown={(e) => e.preventDefault()} // Ngăn mất focus ở Input khi click vào đây
-                                    >
+                        {/* Container cho Tag và Note - luôn chiếm không gian nhất quán */}
+                        <div className="flex items-center gap-2 ml-auto">
+                            {/* Tag Display */}
+                            {isEditting ? (
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <div
+                                            className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] border border-white/10 cursor-pointer hover:opacity-80 transition-opacity"
+                                            onMouseDown={(e) => e.preventDefault()}
+                                        >
+                                            <span
+                                                className="w-1.5 h-1.5 rounded-full"
+                                                style={{ backgroundColor: tags.find(t => t.value === tagInput)?.dot || tags[0].dot }}
+                                            ></span>
+                                            <span style={{ color: tags.find(t => t.value === tagInput)?.dot || tags[0].dot }} className="font-medium">
+                                                {tags.find(t => t.value === tagInput)?.label || "Chung"}
+                                            </span>
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-48 p-2" align="start">
+                                        <div className="flex flex-col gap-2">
+                                            <span className="text-xs font-medium text-muted-foreground px-2">Chọn nhãn</span>
+                                            {tags.map((tag) => (
+                                                <div
+                                                    key={tag.value}
+                                                    className={`flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-secondary transition-colors ${tagInput === tag.value ? 'bg-secondary' : ''}`}
+                                                    onClick={() => setTagInput(tag.value)}
+                                                    onMouseDown={(e) => e.preventDefault()}
+                                                >
+                                                    <div
+                                                        className="h-3 w-3 rounded-full"
+                                                        style={{ backgroundColor: tag.dot }}
+                                                    />
+                                                    <span className="text-sm">{tag.label}</span>
+                                                    {tagInput === tag.value && (
+                                                        <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            ) : (
+                                task.tag && task.tag !== 'general' && (
+                                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] border border-white/10">
                                         <span
                                             className="w-1.5 h-1.5 rounded-full"
-                                            style={{ backgroundColor: tags.find(t => t.value === tagInput)?.dot || tags[0].dot }}
+                                            style={{ backgroundColor: taskTag.dot }}
                                         ></span>
-                                        <span style={{ color: tags.find(t => t.value === tagInput)?.dot || tags[0].dot }} className="font-medium">
-                                            {tags.find(t => t.value === tagInput)?.label || "Chung"}
+                                        <span style={{ color: taskTag.dot }} className="font-medium">
+                                            {taskTag.label}
                                         </span>
                                     </div>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-48 p-2" align="start">
-                                    <div className="flex flex-col gap-2">
-                                        <span className="text-xs font-medium text-muted-foreground px-2">Chọn nhãn</span>
-                                        {tags.map((tag) => (
-                                            <div
-                                                key={tag.value}
-                                                className={`flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-secondary transition-colors ${tagInput === tag.value ? 'bg-secondary' : ''}`}
-                                                onClick={() => setTagInput(tag.value)}
-                                                onMouseDown={(e) => e.preventDefault()} // Ngăn mất focus ở Input khi chọn tag
-                                            >
-                                                <div
-                                                    className="h-3 w-3 rounded-full"
-                                                    style={{ backgroundColor: tag.dot }}
-                                                />
-                                                <span className="text-sm">{tag.label}</span>
-                                                {tagInput === tag.value && (
-                                                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
-                        ) : (
-                            // Chế độ xem: Chỉ hiển thị nếu tag khác general (hoặc tùy logic cũ)
-                            task.tag && task.tag !== 'general' && (
-                                <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary text-[10px] border border-white/10">
-                                    <span
-                                        className="w-1.5 h-1.5 rounded-full"
-                                        style={{ backgroundColor: taskTag.dot }}
-                                    ></span>
-                                    <span style={{ color: taskTag.dot }} className="font-medium">
-                                        {taskTag.label}
-                                    </span>
-                                </div>
-                            )
-                        )}
+                                )
+                            )}
+
+                            {/* Note Icon */}
+                            {task.note && !isEditting && (
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-6 w-6 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary/80"
+                                        >
+                                            <StickyNote className="size-4" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-80 p-4" align="start" side="bottom">
+                                        <div className="flex flex-col gap-2">
+                                            <h4 className="font-semibold leading-none">Ghi chú</h4>
+                                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{task.note}</p>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -214,6 +268,7 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                             setIsEditting(true);
                             setTitleInput(task.title || "");
                             setTagInput(task.tag || "general");
+                            setNoteInput(task.note || "");
                         }}
                     >
                         <SquarePen className="size-4" />

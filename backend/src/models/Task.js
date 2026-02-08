@@ -33,7 +33,13 @@ const taskSchema = new mongoose.Schema(
     tag: {
       type: String,
       enum: ["general", "work", "study", "personal"],
+      enum: ["general", "work", "study", "personal"],
       default: "general",
+    },
+    note: {
+      type: String,
+      default: "",
+      trim: true,
     },
   },
 

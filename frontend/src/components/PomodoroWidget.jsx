@@ -116,14 +116,14 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
     return (
         <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-50 animate-in slide-in-from-bottom-5 duration-500">
             <Card className={cn(
-                // Mobile: Full Width, Desktop: 340px (reduced from 380px)
-                "w-full sm:w-[340px] max-w-[calc(100vw-2rem)] backdrop-blur-xl border-2 transition-all duration-700 overflow-hidden",
+                // Mobile: Full Width, Desktop: 300px (reduced from 340px)
+                "w-full sm:w-[300px] max-w-[calc(100vw-2rem)] backdrop-blur-xl border-2 transition-all duration-700 overflow-hidden",
                 config.bg,
                 config.border,
                 config.shadow,
                 isActive && config.glow
             )}>
-                <CardContent className="p-3 sm:p-8 relative">
+                <CardContent className="p-3 sm:p-6 relative">
                     {/* Decorative Background */}
                     <div className="absolute inset-0 opacity-20 dark:opacity-25 pointer-events-none">
                         <div className={cn(
@@ -149,10 +149,10 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                     {/* Header with Icon */}
                     <div className="text-center mb-2 sm:mb-6 relative z-10">
                         <div className={cn(
-                            "inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br shadow-lg mb-2 sm:mb-3 transition-transform hover:scale-110 duration-300",
+                            "inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br shadow-lg mb-2 sm:mb-3 transition-transform hover:scale-110 duration-300",
                             config.gradient
                         )}>
-                            <ModeIcon className="w-5 h-5 sm:w-7 sm:h-7 text-white drop-shadow" />
+                            <ModeIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white drop-shadow" />
                         </div>
                         <h3 className={cn(
                             "text-base sm:text-lg font-bold tracking-tight",
@@ -163,7 +163,7 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                     </div>
 
                     {/* Mode Tabs */}
-                    <div className="flex justify-center gap-1.5 sm:gap-2 mb-2 sm:mb-8 bg-white/80 dark:bg-gray-900/40 p-1 sm:p-1.5 rounded-2xl backdrop-blur-md border border-gray-200/60 dark:border-gray-700/40 shadow-sm relative z-10">
+                    <div className="flex justify-center gap-1.5 sm:gap-2 mb-2 sm:mb-6 bg-white/80 dark:bg-gray-900/40 p-1 sm:p-1.5 rounded-2xl backdrop-blur-md border border-gray-200/60 dark:border-gray-700/40 shadow-sm relative z-10">
                         {Object.values(POMODORO_MODES).map((m) => {
                             const Icon = m.id === 'focus' ? Brain : m.id === 'short' ? Coffee : Timer;
                             return (
@@ -188,13 +188,13 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                     <div className="text-center mb-2 sm:mb-6 relative">
                         {/* Outer Glow Ring */}
                         <div className={cn(
-                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 sm:w-64 sm:h-64 rounded-full blur-3xl transition-opacity duration-1000",
+                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 sm:w-48 sm:h-48 rounded-full blur-3xl transition-opacity duration-1000",
                             isActive ? "opacity-25 dark:opacity-30" : "opacity-10 dark:opacity-15",
                             `bg-gradient-to-br ${config.gradient}`
                         )} />
 
                         {/* Progress Circle Background */}
-                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-56 sm:h-56 -rotate-90 pointer-events-none">
+                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 -rotate-90 pointer-events-none">
                             <circle
                                 cx="64" cy="64" r="56"
                                 fill="none"
@@ -203,7 +203,7 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                                 className={cn(config.circleBg, "sm:hidden")}
                             />
                             <circle
-                                cx="112" cy="112" r="104"
+                                cx="88" cy="88" r="80"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="6"
@@ -212,7 +212,7 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                         </svg>
 
                         {/* Progress Circle Active */}
-                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-56 sm:h-56 -rotate-90 pointer-events-none">
+                        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 sm:w-44 sm:h-44 -rotate-90 pointer-events-none">
                             <defs>
                                 <linearGradient id="progressGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stopColor={config.ringLight} stopOpacity="0.9" />
@@ -252,11 +252,11 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                             />
                             {/* Desktop Circle */}
                             <circle
-                                cx="112" cy="112" r="104"
+                                cx="88" cy="88" r="80"
                                 fill="none"
                                 strokeWidth="8"
-                                strokeDasharray={2 * Math.PI * 104}
-                                strokeDashoffset={2 * Math.PI * 104 * (1 - getProgress() / 100)}
+                                strokeDasharray={2 * Math.PI * 80}
+                                strokeDashoffset={2 * Math.PI * 80 * (1 - getProgress() / 100)}
                                 className="transition-all duration-1000 ease-out dark:hidden hidden sm:block"
                                 strokeLinecap="round"
                                 stroke="url(#progressGradientLight)"
@@ -265,11 +265,11 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                                 }}
                             />
                             <circle
-                                cx="112" cy="112" r="104"
+                                cx="88" cy="88" r="80"
                                 fill="none"
                                 strokeWidth="8"
-                                strokeDasharray={2 * Math.PI * 104}
-                                strokeDashoffset={2 * Math.PI * 104 * (1 - getProgress() / 100)}
+                                strokeDasharray={2 * Math.PI * 80}
+                                strokeDashoffset={2 * Math.PI * 80 * (1 - getProgress() / 100)}
                                 className="transition-all duration-1000 ease-out hidden dark:block sm:dark:block"
                                 strokeLinecap="round"
                                 stroke="url(#progressGradientDark)"
@@ -280,9 +280,9 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                         </svg>
 
                         {/* Timer Text */}
-                        <div className="relative z-10 flex items-center justify-center h-32 sm:h-56">
+                        <div className="relative z-10 flex items-center justify-center h-32 sm:h-44">
                             <div className={cn(
-                                "text-4xl sm:text-7xl font-black tabular-nums tracking-tighter bg-clip-text text-transparent bg-gradient-to-br transition-all duration-500 select-none",
+                                "text-4xl sm:text-6xl font-black tabular-nums tracking-tighter bg-clip-text text-transparent bg-gradient-to-br transition-all duration-500 select-none",
                                 config.gradient,
                                 "drop-shadow-sm"
                             )}>
@@ -310,7 +310,7 @@ export const PomodoroWidget = ({ isOpen, onClose }) => {
                         <Button
                             onClick={toggleTimer}
                             className={cn(
-                                "w-12 h-12 sm:w-16 sm:h-16 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 text-white border-0",
+                                "w-12 h-12 sm:w-14 sm:h-14 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 text-white border-0",
                                 `bg-gradient-to-br ${config.gradient}`,
                                 "hover:brightness-110 active:scale-105"
                             )}

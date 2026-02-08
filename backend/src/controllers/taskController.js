@@ -17,7 +17,7 @@ export const getAllTasks = async (req, res) => {
 export const createTask = async (req, res) => {
   try {
     //Nhận cả title và dueDate từ body
-    const { title, dueDate, tag } = req.body;
+    const { title, dueDate, tag, note } = req.body;
     const userId = req.user?._id;
 
     // Truyền cả object chứa title và dueDate sang service
@@ -25,7 +25,10 @@ export const createTask = async (req, res) => {
       {
         title,
         dueDate,
-        tag: tag || "general"
+        title,
+        dueDate,
+        tag: tag || "general",
+        note,
       });
 
     res.status(201).json(newTask);
@@ -38,12 +41,12 @@ export const createTask = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     //Lấy thêm dueDate từ req.body
-    const { title, status, completedAt, dueDate, tag } = req.body;
+    const { title, status, completedAt, dueDate, tag, note } = req.body;
     const taskId = req.params.id;
     const userId = req.user?._id;
 
     //Gom các dữ liệu cần update vào một object
-    const updateData = { title, status, completedAt, dueDate, tag };
+    const updateData = { title, status, completedAt, dueDate, tag, note };
 
     if (dueDate) {
       updateData.isReminded = false;

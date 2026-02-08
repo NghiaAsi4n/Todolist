@@ -57,12 +57,13 @@ const getAllTasks = async (userId, filter, search) => {
 };
 
 const createTask = async (userId, taskData) => {
-  const { title, dueDate, tag } = taskData;
+  const { title, dueDate, tag, note } = taskData;
   const task = new Task({
     title,
     userId,
     dueDate: dueDate || null,
-    tag: tag || "general"
+    tag: tag || "general",
+    note: note || ""
   });
 
   return await task.save();
@@ -76,6 +77,7 @@ const updateTask = async (userId, taskId, data) => {
   if (data.status !== undefined) updateData.status = data.status;
   if (data.completedAt !== undefined) updateData.completedAt = data.completedAt;
   if (data.tag !== undefined) updateData.tag = data.tag;
+  if (data.note !== undefined) updateData.note = data.note;
 
   return await Task.findOneAndUpdate(
     { _id: taskId, userId },

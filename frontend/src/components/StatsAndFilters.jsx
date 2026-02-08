@@ -34,23 +34,7 @@ export const StatsAndFilters = ({
                     </Badge>
                 </div>
 
-                {/* Phần bộ lọc */}
                 <div className="flex flex-wrap gap-2 items-center">
-                    {/* Nút bật/tắt tìm kiếm */}
-                    <Button
-                        id="filter-btn"
-                        variant={searchQuery ? 'default' : 'ghost'}
-                        size="sm"
-                        className={`capitalize transition-all border border-dashed ${searchQuery
-                            ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20'
-                            : 'text-slate-600 border-slate-300 hover:bg-slate-100 dark:text-slate-400 dark:border-slate-700 dark:hover:text-white dark:hover:bg-slate-800'
-                            }`}
-                        onClick={() => setSearchQuery(prev => prev === undefined ? "" : undefined)}
-                    >
-                        <Search className="size-4 mr-1" />
-                        Lọc
-                    </Button>
-
                     {
                         Object.keys(FilterType).map((type) => (
                             <Button
@@ -67,6 +51,21 @@ export const StatsAndFilters = ({
                                 {FilterType[type]}
                             </Button>
                         ))}
+
+                    {/* Nút bật/tắt tìm kiếm */}
+                    <Button
+                        id="filter-btn"
+                        variant={searchQuery ? 'default' : 'ghost'}
+                        size="sm"
+                        className={`capitalize transition-all border border-dashed ${searchQuery
+                            ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20'
+                            : 'text-slate-600 border-slate-300 hover:bg-slate-100 dark:text-slate-400 dark:border-slate-700 dark:hover:text-white dark:hover:bg-slate-800'
+                            }`}
+                        onClick={() => setSearchQuery(prev => prev === undefined ? "" : undefined)}
+                    >
+                        <Search className="size-4 mr-1" />
+                        Lọc
+                    </Button>
                 </div>
             </div>
 

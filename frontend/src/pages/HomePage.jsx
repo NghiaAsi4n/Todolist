@@ -242,7 +242,7 @@ const HomePage = () => {
 
           {/* Copyright Text */}
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            © 2026 Trần Trọng Nghĩa. All rights reserved.
+            © 2026 Tran Trong Nghia. All rights reserved.
           </p>
         </div>
       </div>

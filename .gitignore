@@ -2,3 +2,7 @@
 node_modules
 .vscode
 .github
+.agent
+AGENTS.md
+docs
+.ai-devkit.json
