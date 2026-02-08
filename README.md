@@ -1,5 +1,5 @@
-# 🚀 Pro Task Manager & Productivity Suite
-> Một hệ thống quản lý công việc toàn diện (All-in-one Ecosystem) tích hợp phương pháp Pomodoro, phân tích hiệu suất và hệ thống nhắc nhở tự động.
+# 🚀 Pro Task Manager
+> Một hệ thống quản lý hiệu suất công việc toàn diện tích hợp phương pháp Pomodoro và Dashboard thống kê trực quan. Tối ưu hóa trải nghiệm tìm kiếm thời gian thực, tự động gửi email thông báo tự động.
 
 ## 🔗 Demo
 * **Live App:** [https://todo-app-frontend-bice-five.vercel.app](https://todo-app-frontend-bice-five.vercel.app)
@@ -7,7 +7,7 @@
 
 ---
 
-## ✨ Tính năng nổi bật (Key Features)
+## ✨ Tính năng nổi bật
 
 ### 🎯 Quản lý công việc thông minh
 * **CRUD Task:** Thêm, sửa, xóa công việc nhanh chóng.
@@ -16,11 +16,11 @@
     * Lọc theo thời gian (Hôm nay, Tuần, Tháng).
     * Tìm kiếm theo từ khóa với công nghệ **Debounce** (giảm tải server).
 
-### 🍅 Nâng cao năng suất (Productivity)
+### 🍅 Nâng cao năng suất
 * **Pomodoro Widget:** Đồng hồ đếm ngược tích hợp sẵn (Focus / Short Break / Long Break) với âm thanh thông báo.
 * **Analytics Dashboard:** Biểu đồ trực quan (Bar/Pie Chart) thống kê hiệu suất làm việc, tự động thích ứng với giao diện Sáng/Tối.
 
-### 🤖 Hệ thống tự động hóa (Automation System)
+### 🤖 Hệ thống tự động hóa
 * **One-Tap Login:** Đăng nhập nhanh bằng **Google OAuth 2.0**.
 * **Daily Reminder:** Tự động gửi email nhắc việc vào **07:00 sáng** mỗi ngày.
 * **Real-time Warning:** Quét mỗi phút và gửi cảnh báo qua email nếu có task sắp hết hạn trong 30 phút.
@@ -44,8 +44,6 @@
 
 ---
 
-## 💡 Điểm sáng kỹ thuật (Technical Highlights)
-
 ### 🚀 High-Performance Data Aggregation
 Thay vì thực hiện nhiều truy vấn rời rạc, dự án sử dụng **MongoDB Aggregation Pipeline** với stage **`$facet`** để xử lý song song 3 luồng dữ liệu phức tạp (Thống kê tổng quan, Phân bổ theo Tag, Biểu đồ xu hướng 7 ngày).
 > **Kết quả:** Giảm 66% số lần Round-trip tới Database, tối ưu hóa thời gian phản hồi API.
@@ -57,4 +55,3 @@ Giải quyết bài toán bảo mật khi tách rời Frontend (Vercel) và Back
 
 ### ⚡ Concurrency & Data Integrity
 Xử lý vấn đề tranh chấp dữ liệu (Race Condition) trong các tác vụ nền (Cron Jobs) bằng kỹ thuật **Atomic Operations** (`findOneAndUpdate`). Đảm bảo tính nhất quán của dữ liệu và ngăn chặn việc gửi trùng lặp email thông báo ngay cả khi mở rộng Server (Scaling).
-
