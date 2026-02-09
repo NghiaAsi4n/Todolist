@@ -7,6 +7,8 @@ import { Button } from "./ui/button";
 import { PomodoroWidget } from './PomodoroWidget';
 import { useNavigate } from 'react-router';
 
+import { cn } from "@/lib/utils";
+
 export const Header = () => {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);

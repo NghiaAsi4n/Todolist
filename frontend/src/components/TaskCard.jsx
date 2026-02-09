@@ -65,7 +65,8 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
     };
 
     const handleKeyDown = (event) => {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
             handleSaveTitle();
         } else if (event.key === "Escape") {
             handleCancelEdit();
@@ -133,25 +134,49 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                                 onChange={(e) => setTitleInput(e.target.value)}
                                 onKeyDown={handleKeyDown}
                             />
+
                             <Textarea
                                 placeholder="Ghi chú..."
                                 value={noteInput}
                                 onChange={(e) => setNoteInput(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                className="text-sm bg-secondary/30 min-h-[60px]"
+                                className="text-sm bg-secondary/30 min-h-[60px] resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
                             />
                         </div>
                     ) : (
-                        <p
-                            className={cn(
-                                "text-base transition-all duration-200 select-none cursor-default",
-                                task.status === "complete"
-                                    ? "line-through text-muted-foreground"
-                                    : "text-foreground"
+                        <div className="flex items-center gap-2">
+                            <p
+                                className={cn(
+                                    "text-base transition-all duration-200 select-none cursor-default",
+                                    task.status === "complete"
+                                        ? "line-through text-muted-foreground"
+                                        : "text-foreground"
+                                )}
+                            >
+                                {task.title}
+                            </p>
+                            {/* Note Icon - cùng hàng và cùng kích thước với task title */}
+                            {task.note && (
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-5 w-5 p-0 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary/80 flex-shrink-0"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <StickyNote className="size-3.5" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-80 p-4" align="start" side="bottom">
+                                        <div className="flex flex-col gap-2">
+                                            <h4 className="font-semibold leading-none text-base">Ghi chú</h4>
+                                            <p className="text-base text-muted-foreground whitespace-pre-wrap">{task.note}</p>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
                             )}
-                        >
-                            {task.title}
-                        </p>
+                        </div>
                     )}
 
                     {/* ngày tạo & ngày hoàn thành */}
@@ -177,7 +202,7 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                             </div>
                         )}
 
-                        {/* Container cho Tag và Note - luôn chiếm không gian nhất quán */}
+                        {/* Container cho Tag */}
                         <div className="flex items-center gap-2 ml-auto">
                             {/* Tag Display */}
                             {isEditting ? (
@@ -231,27 +256,6 @@ const TaskCard = ({ task, index, handleTaskChanged }) => {
                                         </span>
                                     </div>
                                 )
-                            )}
-
-                            {/* Note Icon */}
-                            {task.note && !isEditting && (
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-6 w-6 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary/80"
-                                        >
-                                            <StickyNote className="size-4" />
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-80 p-4" align="start" side="bottom">
-                                        <div className="flex flex-col gap-2">
-                                            <h4 className="font-semibold leading-none">Ghi chú</h4>
-                                            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{task.note}</p>
-                                        </div>
-                                    </PopoverContent>
-                                </Popover>
                             )}
                         </div>
                     </div>

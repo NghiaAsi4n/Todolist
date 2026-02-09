@@ -12,9 +12,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { Textarea } from "./ui/textarea";
+import { useAuth } from "@/hooks/useAuth";
 
 const AddTask = ({ handleNewTaskAdded }) => {
     const { tags } = useTask();
+    const { user } = useAuth();
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [note, setNote] = useState("");
     const [dueDate, setDueDate] = useState(null);
@@ -24,6 +26,14 @@ const AddTask = ({ handleNewTaskAdded }) => {
     const currentTag = tags.find(t => t.value === newTag) || tags[0];
 
     const addTask = async () => {
+        if (!user) {
+            toast.error("Vui lòng đăng nhập để thêm nhiệm vụ!", {
+                duration: 3000,
+                position: 'top-center'
+            });
+            return;
+        }
+
         if (newTaskTitle.trim()) {
             try {
                 await api.post("/tasks", {
@@ -49,7 +59,8 @@ const AddTask = ({ handleNewTaskAdded }) => {
 
     // Xử lý khi nhấn Enter
     const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
             addTask();
         }
     };
@@ -163,7 +174,8 @@ const AddTask = ({ handleNewTaskAdded }) => {
                                     placeholder="Nhập ghi chú..."
                                     value={note}
                                     onChange={(e) => setNote(e.target.value)}
-                                    className="min-h-[80px] text-sm resize-none"
+
+                                    className="min-h-[80px] text-sm resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
                                     autoFocus
                                 />
                             </div>

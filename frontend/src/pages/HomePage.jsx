@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import api from "@/lib/axios";
 import { visibleTaskLimit } from "@/lib/data";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useAuth } from "@/hooks/useAuth";
 
 const HomePage = () => {
   //State: Quản lý giá trị người dùng gọi //Tạo state để lưu dữ liệu
@@ -27,6 +28,9 @@ const HomePage = () => {
 
   // Debounce search để tránh gọi API quá nhiều lần khi gõ
   const debouncedSearch = useDebounce(searchQuery, 700);
+
+  // Auth check
+  const { refreshUser } = useAuth();
 
   //Logic
 
@@ -63,10 +67,13 @@ const HomePage = () => {
 
   //lắng nghe sự kiện đăng nhập/đăng xuất để load lại data
   useEffect(() => {
-    const onAuthChanged = () => fetchTasks();
+    const onAuthChanged = () => {
+      fetchTasks();
+      refreshUser();
+    };
     window.addEventListener("auth-changed", onAuthChanged);
     return () => window.removeEventListener("auth-changed", onAuthChanged);
-  }, [fetchTasks]);
+  }, [fetchTasks, refreshUser]);
 
   // Lọc task theo trạng thái (Active/Completed)
   // SỬA LỖI: Dùng useMemo để tránh tạo mảng mới mỗi lần render,
