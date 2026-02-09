@@ -94,6 +94,23 @@ const AddTask = ({ handleNewTaskAdded }) => {
                             onChange={(date) => setDueDate(date)}
                             dateFormat="dd/MM"
                             locale={vi}
+                            popperPlacement="bottom-start"
+                            popperModifiers={[
+                                {
+                                    name: "offset",
+                                    options: {
+                                        offset: [10, 10],
+                                    },
+                                },
+                                {
+                                    name: "preventOverflow",
+                                    options: {
+                                        rootBoundary: "viewport",
+                                        tether: false,
+                                        altAxis: true,
+                                    },
+                                },
+                            ]}
                             customInput={
                                 <Button
                                     variant="outline"
