@@ -22,7 +22,7 @@ export const sendWelcomeEmail = async (to, name) => {
     },
   });
 
-  const subject = `Chào mừng ${name} đến với To Do List! 🚀`;
+  const subject = `Chào mừng ${name} đến với Pro Task Manager! 🚀`;
   const appUrl = process.env.CLIENT_URL || "http://localhost:5173";
   const html = `
       <div style="background-color: #f3f4f6; padding: 40px 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
@@ -52,7 +52,7 @@ export const sendWelcomeEmail = async (to, name) => {
             <p style="color: #4b5563; font-size: 16px; line-height: 1.6;">
               Chúc bạn một ngày làm việc hiệu quả!<br/>
               Thân mến,<br/>
-              <strong>Đội ngũ To Do List</strong>
+              <strong>Đội ngũ Pro Task Manager</strong>
             </p>
           </div>
 
@@ -69,7 +69,7 @@ export const sendWelcomeEmail = async (to, name) => {
     `;
 
   await transporter.sendMail({
-    from: `"To Do List App" <${process.env.EMAIL_USER}>`,
+    from: `"Pro Task Manager App" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,
@@ -94,7 +94,7 @@ export const sendDailyReminder = async (to, name, tasks) => {
       </div>
     </div>
   `;
-  await transporter.sendMail({ from: `"To Do List" <${process.env.EMAIL_USER}>`, to, subject: `📅 Kế hoạch hôm nay: ${tasks.length} việc cần làm`, html });
+  await transporter.sendMail({ from: `"Pro Task Manager" <${process.env.EMAIL_USER}>`, to, subject: `📅 Kế hoạch hôm nay: ${tasks.length} việc cần làm`, html });
 };
 
 export const sendUpcomingReminder = async (to, name, task) => {
@@ -138,13 +138,13 @@ export const sendUpcomingReminder = async (to, name, task) => {
         </div>
       </div>
       <div style="text-align: center; margin-top: 15px; color: #9ca3af; font-size: 12px;">
-        Email được gửi tự động từ hệ thống To Do List
+        Email được gửi tự động từ hệ thống Pro Task Manager
       </div>
     </div>
   `;
 
   await transporter.sendMail({
-    from: `"To Do List" <${process.env.EMAIL_USER}>`,
+    from: `"Pro Task Manager" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html
@@ -166,7 +166,7 @@ export const sendOverdueWarning = async (to, name, tasks) => {
       </div>
     </div>
   `;
-  await transporter.sendMail({ from: `"To Do List" <${process.env.EMAIL_USER}>`, to, subject: `⚠️ Báo động: Bạn có ${tasks.length} task quá hạn!`, html });
+  await transporter.sendMail({ from: `"Pro Task Manager" <${process.env.EMAIL_USER}>`, to, subject: `⚠️ Báo động: Bạn có ${tasks.length} task quá hạn!`, html });
 };
 
 
@@ -182,7 +182,7 @@ export const sendWeeklyReport = async (to, name, count) => {
       </div>
     </div>
   `;
-  await transporter.sendMail({ from: `"To Do List" <${process.env.EMAIL_USER}>`, to, subject: `🏆 Tổng kết tuần: Bạn thật chăm chỉ!`, html });
+  await transporter.sendMail({ from: `"Pro Task Manager" <${process.env.EMAIL_USER}>`, to, subject: `🏆 Tổng kết tuần: Bạn thật chăm chỉ!`, html });
 };
 
 

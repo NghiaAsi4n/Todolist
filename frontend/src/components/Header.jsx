@@ -89,7 +89,7 @@ export const Header = () => {
       <header className="w-full">
         <div className="space-y-2 text-center pt-16 pb-6 px-4">
           <h1 className="text-4xl font-bold text-transparent bg-primary bg-clip-text animate-in fade-in zoom-in duration-500">
-            TO DO LIST
+            PRO TASK MANAGER
           </h1>
 
           <p className="text-muted-foreground dark:text-slate-50 transition-colors text-sm sm:text-base">
